@@ -14,9 +14,9 @@
 " 默认情况下的分组，可以再前面覆盖之
 "----------------------------------------------------------------------
 if !exists('g:bundle_group')
-	let g:bundle_group = ['basic', 'tags', 'enhanced', 'filetypes', 'textobj']
-	let g:bundle_group += ['tags', 'airline', 'nerdtree', 'ale', 'echodoc']
-	let g:bundle_group += ['leaderf']
+	let g:bundle_group = ['basic', 'enhanced', 'filetypes', 'textobj']
+	let g:bundle_group += ['gtags-cscope', 'airline', 'nerdtree', 'lightline']
+	let g:bundle_group += ['leaderf', 'tagbar', 'coc']
 endif
 
 
@@ -45,10 +45,10 @@ call plug#begin(get(g:, 'bundle_home', '~/.vim/bundles'))
 Plug 'easymotion/vim-easymotion'
 
 " 文件浏览器，代替 netrw
-Plug 'justinmk/vim-dirvish'
+"Plug 'justinmk/vim-dirvish'
 
 " 表格对齐，使用命令 Tabularize
-Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
+" Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
 
 " Diff 增强，支持 histogram / patience 等更科学的 diff 算法
 Plug 'chrisbra/vim-diff-enhanced'
@@ -156,19 +156,19 @@ if index(g:bundle_group, 'enhanced') >= 0
 	Plug 'junegunn/fzf'
 
 	" 给不同语言提供字典补全，插入模式下 c-x c-k 触发
-	Plug 'asins/vim-dict'
+	"Plug 'asins/vim-dict'
 
 	" 使用 :FlyGrep 命令进行实时 grep
-	Plug 'wsdjeg/FlyGrep.vim'
+	"Plug 'wsdjeg/FlyGrep.vim'
 
 	" 使用 :CtrlSF 命令进行模仿 sublime 的 grep
-	Plug 'dyng/ctrlsf.vim'
+	"Plug 'dyng/ctrlsf.vim'
 
 	" 配对括号和引号自动补全
 	Plug 'Raimondi/delimitMate'
 
 	" 提供 gist 接口
-	Plug 'lambdalisue/vim-gista', { 'on': 'Gista' }
+	"Plug 'lambdalisue/vim-gista', { 'on': 'Gista' }
 	
 	" ALT_+/- 用于按分隔符扩大缩小 v 选区
 	map <m-=> <Plug>(expand_region_expand)
@@ -258,7 +258,7 @@ endif
 if index(g:bundle_group, 'filetypes') >= 0
 
 	" powershell 脚本文件的语法高亮
-	Plug 'pprovost/vim-ps1', { 'for': 'ps1' }
+	"Plug 'pprovost/vim-ps1', { 'for': 'ps1' }
 
 	" lua 语法高亮增强
 	Plug 'tbastos/vim-lua', { 'for': 'lua' }
@@ -301,7 +301,24 @@ if index(g:bundle_group, 'airline') >= 0
 	let g:airline#extensions#vimagit#enabled = 0
 endif
 
-
+if index(g:bundle_group, 'lightline') >= 0
+   Plug 'itchyny/lightline.vim'
+   Plug 'ap/vim-buftabline'
+   let g:lightline = {
+        \ 'colorscheme': 'gruvbox8',
+        \ 'active': {
+        \   'left': [ [ 'mode', 'paste' ],
+        \             [ 'readonly', 'filename', 'modified', 'helloworld']]
+        \ },
+        \ 'component': {
+        \   'paste': '%{&paste?"PASTE":""}',
+      \ },
+        \ }
+   let g:lightline.enable = {
+      \ 'statusline': 1,
+      \ 'tabline': 1
+      \ }
+endif
 "----------------------------------------------------------------------
 " NERDTree
 "----------------------------------------------------------------------
@@ -317,8 +334,15 @@ if index(g:bundle_group, 'nerdtree') >= 0
 	noremap <space>nt :NERDTreeToggle<cr>
 endif
 
+if index(g:bundle_group, 'tagbar') >= 0
+	Plug 'majutsushi/tagbar',  { 'for': ['asm', 'h', 'hpp', 'c', 'cpp', 'python', 'js', 'ts', 'java', 'go', 'html', 'css', 'vim', 'sh', 'tex', 'md'] }
+	noremap <F2> :TagbarToggle<cr>
+    let g:tagbar_ctags_bin = 'ctags'  " tagbar以来ctags插件
+	let g:tagbar_width = 30         " 设置tagbar的宽度为30列，默认40
+	let g:tagbar_autofocus = 1        " 这是tagbar一打开，光标即在tagbar页面内，默认在vim打开的文件内
+    let g:tagbar_sort  = 0        " 设置标签不排序，默认排序
+endif
 
-"----------------------------------------------------------------------
 " LanguageTool 语法检查
 "----------------------------------------------------------------------
 if index(g:bundle_group, 'grammer') >= 0
@@ -518,6 +542,137 @@ if index(g:bundle_group, 'leaderf') >= 0
 endif
 
 
+if index(g:bundle_group, 'coc') >= 0
+	"安装coc插件
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	"Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build', 'branch': 'main' }
+
+	let g:coc_global_extensions =
+				\ [
+				\ 'coc-python',
+				\ 'coc-tsserver',
+				\ 'coc-java',
+				\ 'coc-vimtex',
+				\ 'coc-html',
+				\ 'coc-css',
+				\ 'coc-yaml',
+				\ 'coc-json',
+				\ 'coc-emmet',
+				\ 'coc-snippets',
+				\ 'coc-emoji',
+				\ 'coc-highlight',
+				\ 'coc-git',
+				\ 'coc-ccls',
+				\ 'coc-sh',
+				\]
+				" \ 'coc-java',
+				" \ 'coc-diagnostic',
+				" \ 'coc-prettier',
+				" \ 'coc-pairs',
+
+	" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+	" 使用ctrl j ctrl k来跳转补全块
+	inoremap <silent><expr> <TAB>
+		\ pumvisible() ? "\<C-n>" :
+		\ <SID>check_back_space() ? "\<TAB>" :
+		\ coc#refresh()
+	inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+	function! s:check_back_space() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
+	endfunction
+
+	" 回车完成代码块
+	inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :
+											\"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+	" 跳转到下一个标记处
+	let g:coc_snippet_next = '<TAB>'
+	let g:coc_snippet_pre = '<S-TAB>'
+
+	" 使用ctrl space触发补全
+	inoremap <silent><expr> <c-space> coc#refresh()
+
+	" diagnostic 跳转
+	nmap <silent> <space>[ <Plug>(coc-diagnostic-prev)
+	nmap <silent> <space>] <Plug>(coc-diagnostic-next)
+
+	" 定义跳转
+	nmap <silent> gd <Plug>(coc-definition)
+	nmap <silent> gy <Plug>(coc-type-definition)
+	nmap <silent> gi <Plug>(coc-implementation)
+	nmap <silent> gr <Plug>(coc-references)
+
+	" Use K to show documentation in preview window
+	" function! s:show_documentation()
+	"   if (index(['vim','help'], &filetype) >= 0)
+	"     execute 'h '.expand('<cword>')
+	"   else
+	"     call CocAction('doHover')
+	"   endif
+	" endfunction
+	" nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+	" nnoremap <silent> <space>k :call CocActionAsync('showSignatureHelp')<CR>
+
+	" Highlight symbol under cursor on CursorHold
+	set updatetime=100
+	au CursorHold * silent call CocActionAsync('highlight')
+	au CursorHoldI * sil call CocActionAsync('showSignatureHelp')
+
+	" Remap for rename current word
+	nmap <space>rn <Plug>(coc-rename)
+
+	augroup mygroup
+	autocmd!
+	" Setup formatexpr specified filetype(s).
+	autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+	" Update signature help on jump placeholder
+	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+	augroup end
+
+	" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+	" xmap <leader>a  <Plug>(coc-codeaction-selected)
+	" nmap <leader>a  <Plug>(coc-codeaction-selected)
+	" Remap for do codeAction of current line
+	" nmap <leader>ac  <Plug>(coc-codeaction)
+	" Fix autofix problem of current line
+	" lsp如果实现quickfix功能，那么通过space qf就可以快速进行修复
+	nmap <space>qf  <Plug>(coc-fix-current)
+
+	" Remap for format selected region
+	xmap <space>f  <Plug>(coc-format-selected)
+	nmap <space>f  <Plug>(coc-format-selected)
+	" Use `:Format` to format current buffer
+	command! -nargs=0 Format :call CocAction('format')
+
+	" Use `:Fold` to fold current buffer
+	"command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+	" Using CocList
+	" Show all diagnostics
+	nnoremap <silent> <space>d  :<C-u>CocList diagnostics<cr>
+	" Manage extensions
+	nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+	" Show commands
+	nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+	" Find symbol of current document
+	nnoremap <silent> <space>t  :<C-u>CocList outline<cr>
+	" Search workspace symbols
+	nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+	" Do default action for next item.
+	" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+	" Do default action for previous item.
+	" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+	" Resume latest coc list
+	nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+	" show coclist
+	nnoremap <silent> <space>l  :<C-u>CocList<CR>
+
+endif
+
+Plug 'lifepillar/vim-colortemplate'
 "----------------------------------------------------------------------
 " 结束插件安装
 "----------------------------------------------------------------------

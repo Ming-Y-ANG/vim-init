@@ -26,7 +26,7 @@ set signcolumn=yes
 set showtabline=2
 
 " 设置显示制表符等隐藏字符
-set list
+"set list
 
 " 右下角显示命令
 set showcmd
@@ -50,7 +50,10 @@ set background=dark
 set t_Co=256
 
 " 设置颜色主题，会在所有 runtimepaths 的 colors 目录寻找同名配置
-color desert256
+"color desert256
+let g:gruvbox_plugin_hi_groups=1
+color gruvbox8
+
 
 
 "----------------------------------------------------------------------
